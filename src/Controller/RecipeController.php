@@ -16,6 +16,18 @@ use Symfony\Component\Routing\Attribute\Route;
 class RecipeController extends AbstractController
 {
 
+
+    /**
+     * @param EntityManagerInterface $em
+    */
+    public function __construct(
+        protected EntityManagerInterface $em
+    )
+    {
+    }
+
+
+
     #[Route('/recipes', name: 'recipe.index')]
     # http://localhost:8000/recipe
     public function index(Request $request, RecipeRepository $recipeRepository): Response
@@ -52,10 +64,17 @@ class RecipeController extends AbstractController
 
 
 
-    #[Route('/recipe/{id}/edit', name: 'recipe.edit', requirements: ['id' => '\d+'])]
-    public function edit(Recipe $recipe): Response
+    #[Route('/recipe/{id}/edit', name: 'recipe.edit')]
+    public function edit(Recipe $recipe, Request $request): Response
     {
          $form = $this->createForm(RecipeType::class, $recipe);
+         $form->handleRequest($request);
+
+         if ($form->isSubmitted() && $form->isValid()) {
+             $this->em->flush();
+             $this->addFlash('success', 'La recette a bien ete modifiee');
+             return $this->redirectToRoute('recipe.index');
+         }
 
          return $this->render('recipe/edit.html.twig', [
              'recipe'  => $recipe,
