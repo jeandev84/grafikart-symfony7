@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class RecipeController extends AbstractController
 {
 
-    #[Route('/recipe', name: 'recipe.index')]
+    #[Route('/recipes', name: 'recipe.index')]
     # http://localhost:8000/recipe
     public function index(Request $request, RecipeRepository $recipeRepository): Response
     {
@@ -45,5 +46,20 @@ class RecipeController extends AbstractController
         return $this->render('recipe/show.html.twig', [
            'recipe' => $recipe
         ]);
+    }
+
+
+
+
+
+    #[Route('/recipe/{id}/edit', name: 'recipe.edit', requirements: ['id' => '\d+'])]
+    public function edit(Recipe $recipe): Response
+    {
+         $form = $this->createForm(RecipeType::class, $recipe);
+
+         return $this->render('recipe/edit.html.twig', [
+             'recipe'  => $recipe,
+             'form'    => $form, // recipe_form
+         ]);
     }
 }
