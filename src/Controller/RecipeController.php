@@ -14,7 +14,7 @@ class RecipeController extends AbstractController
     # http://localhost:8000/recipe
     public function index(Request $request): Response
     {
-          return new Response('Recettes');
+        return $this->render('recipe/index.html.twig');
     }
 
 
@@ -24,24 +24,14 @@ class RecipeController extends AbstractController
     # http://localhost:8000/recipe/pate-bolognaise-32
     public function show(Request $request, string $slug, int $id): Response
     {
-        /*
-        dump(
-            $request->attributes->get('slug'),
-            $request->attributes->getInt('id')
-        );
-
-        dump($request);
-        dump($slug, $id);
-
-        return new JsonResponse([
-            'slug' => $slug
-        ]);
-
-        # return new Response("Recette : ". $slug);
-        */
-
-        return $this->json([
-            'slug' => $slug
+        return $this->render('recipe/show.html.twig', [
+            'slug' => $slug,
+            'demo' => '<strong>Hello</strong>',
+            'id'   => $id,
+            'person' => [
+                'firstname' => 'John',
+                'lastname'  => 'Doe'
+            ]
         ]);
     }
 }
