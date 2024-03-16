@@ -1,17 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Recette : " ~ slug %}
+{% block title "Recette : " ~ recipe.title %}
 
 {% block body %}
-{#    <h3>{{ slug }} {{ demo }}</h3>#}
-{#    <h4>{{ slug | upper }}</h4>#}
-{#    <div>#}
-{#        <p>{{ person.firstname }}</p>#}
-{#        <p>{{ person.lastname }}</p>#}
-{#        <p>{{ person.firstname ~ ' ' ~ person.lastname }}</p>#}
-{#    </div>#}
-{#    <div>{{ slug }} {{ person.firstname ~ ' ' ~ person.lastname | raw }}</div>#}
-{#    <div>{{ demo | raw }}</div>#}
+      <h1>{{ recipe.title }}</h1>
 
-      {{ slug }} {{ demo | raw }}
+      <p>{{ recipe.content | nl2br }}</p>
 {% endblock %}
