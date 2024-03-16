@@ -30,7 +30,7 @@ class RecipeController extends AbstractController
         /*  $recipes = $this->em->getRepository(Recipe::class)->findWithDurationLowerThan(20); */
         $recipes = $recipeRepository->findWithDurationLowerThan(20); // 20 min
 
-        dd($recipeRepository->findTotalDuration());
+        dump($recipeRepository->findTotalDuration());
 
         /*
         $recipes[0]->setTitle("Pates bolognaise");
