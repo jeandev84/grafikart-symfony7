@@ -15,11 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Environment;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 
 #[Route('/admin/recipes', name: 'admin.recipe.')]
+#[IsGranted('ROLE_ADMIN')]
 class RecipeController extends AbstractController
 {
 
@@ -30,6 +32,7 @@ class RecipeController extends AbstractController
      * @param RecipeRepository $recipeRepository
      * @param CategoryRepository $categoryRepository
      * @param Environment $twig
+     * @param UploaderHelper $uploaderHelper
     */
     public function __construct(
         protected EntityManagerInterface $em,
@@ -47,6 +50,8 @@ class RecipeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
     {
+        /* $this->denyAccessUnlessGranted('ROLE_USER'); */
+
         $recipes = $this->recipeRepository->findWithDurationLowerThan(20);
 
         return $this->render('admin/recipe/index.html.twig', [
@@ -73,8 +78,6 @@ class RecipeController extends AbstractController
             return $this->redirectToRoute('admin.recipe.index');
         }
 
-        /* $this->twig->render('recipe/create.html.twig'); */
-
         return $this->render('admin/recipe/create.html.twig', [
             'form'    => $form
         ]);
@@ -90,8 +93,6 @@ class RecipeController extends AbstractController
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     public function edit(Recipe $recipe, Request $request): Response
     {
-         /* dd($this->uploaderHelper->asset($recipe, 'thumbnailFile')); */
-
          $form = $this->formFactory->create(RecipeType::class, $recipe);
 
          $form->handleRequest($request);
@@ -104,7 +105,7 @@ class RecipeController extends AbstractController
 
          return $this->render('admin/recipe/edit.html.twig', [
              'recipe'  => $recipe,
-             'form'    => $form, // recipe_form
+             'form'    => $form
          ]);
     }
 
