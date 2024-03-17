@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use App\Repository\RecipeRepository;
+use App\Validator\BanWord;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 # use Symfony\Component\Validator\Constraints\Length;
@@ -20,6 +21,7 @@ class Recipe
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
+    #[BanWord()]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]

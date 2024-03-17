@@ -58,7 +58,6 @@ class RecipeType extends AbstractType
 
 
 
-
     /**
      * @param PostSubmitEvent $event
      * @return void
