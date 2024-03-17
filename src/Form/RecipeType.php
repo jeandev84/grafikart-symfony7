@@ -21,7 +21,9 @@ class RecipeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
+            ->add('title', TextType::class, [
+                'empty_data' => '', // la valeur par defaut au cas ou le champs est vide
+            ])
             ->add('slug', TextType::class, [
                 'required'    => false
             ])
