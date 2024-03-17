@@ -1,0 +1,7 @@
+{
+  "name": "symfony7",
+  "version": "1.0.0",
+  "dependencies": {
+    "canvas-confetti": "^1.9.2"
+  }
+}
