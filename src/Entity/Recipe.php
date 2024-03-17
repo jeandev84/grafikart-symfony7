@@ -22,7 +22,7 @@ class Recipe
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
     #[BanWord()]
-    private ?string $title = null;
+    private string $title = '';
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
@@ -31,7 +31,7 @@ class Recipe
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(min: 5)]
-    private ?string $content = null;
+    private string $content = '';
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
