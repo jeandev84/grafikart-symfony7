@@ -81,7 +81,8 @@ class CategoryController extends AbstractController
           }
 
           return $this->render('admin/category/edit.html.twig', [
-              'form' => $form
+              'category' => $category,
+              'form'     => $form
           ]);
       }
 
