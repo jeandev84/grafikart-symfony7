@@ -26,7 +26,8 @@ class RecipeType extends AbstractType
                 'empty_data' => '', // la valeur par defaut au cas ou le champs est vide
             ])
             ->add('slug', TextType::class, [
-                'required'    => false
+                'required'    => false,
+                'empty_data' => '', // la valeur par defaut au cas ou le champs est vide
             ])
             ->add('content', TextareaType::class, [
                 'empty_data' => '', // la valeur par default au cas ou le champs est vide
