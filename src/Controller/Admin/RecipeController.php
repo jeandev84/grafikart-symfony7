@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Twig\Environment;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 
 #[Route('/admin/recipes', name: 'admin.recipe.')]
@@ -35,7 +36,8 @@ class RecipeController extends AbstractController
         protected FormFactoryInterface $formFactory,
         protected RecipeRepository $recipeRepository,
         protected CategoryRepository $categoryRepository,
-        protected Environment $twig
+        protected Environment $twig,
+        protected UploaderHelper $uploaderHelper
     )
     {
     }
@@ -88,20 +90,13 @@ class RecipeController extends AbstractController
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     public function edit(Recipe $recipe, Request $request): Response
     {
+         /* dd($this->uploaderHelper->asset($recipe, 'thumbnailFile')); */
+
          $form = $this->formFactory->create(RecipeType::class, $recipe);
 
          $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
-
-             /** @var UploadedFile $file */
-             if($file = $form->get('thumbnailFile')->getData()) {
-                 $filename = $recipe->getId() . '.' . $file->getClientOriginalExtension();
-                 $file->move($this->getParameter('kernel.project_dir') . '/public/recipes/images', $filename);
-                 $recipe->setThumbnail($filename);
-                 /* dd($file->getClientOriginalName(), $file->getClientOriginalExtension()); */
-             }
-
              $this->em->flush();
              $this->addFlash('success', 'La recette a bien ete modifiee');
              return $this->redirectToRoute('admin.recipe.index');

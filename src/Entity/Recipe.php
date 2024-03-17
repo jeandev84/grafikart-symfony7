@@ -56,15 +56,6 @@ class Recipe
     private ?string $thumbnail = null;
 
 
-    /**
-     * @var float|null
-    */
-    ##[ORM\Column(nullable: true)]
-    #private ?float $thumbnailSize = null;
-
-
-    # recipes - provient du mapping definit dans vich_uploader.yaml
-    # #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail', size: 'thumbnailSize')]
     #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail')]
     #[Assert\Image()]
     private ?File $thumbnailFile = null;
