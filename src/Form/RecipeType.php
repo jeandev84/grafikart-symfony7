@@ -85,10 +85,12 @@ class RecipeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'        => Recipe::class,
+            /*
             'validation_groups' => [
                 'Default', // les regles par defaut
                 'Extra'
             ] // groups de validation utiliser par le formuaire
+            */
         ]);
     }
 }
