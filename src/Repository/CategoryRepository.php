@@ -37,4 +37,39 @@ class CategoryRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult();
     }
+
+
+
+    /**
+     * @return array
+     */
+    public function createDQLExample(): array
+    {
+        /*
+        $this->getEntityManager()->createNativeQuery(
+            'CREATE NATIVE SQL HERE'
+        )->getResult();
+        */
+
+        /*
+        dd(
+            $this->getEntityManager()->createQuery(<<<DQL
+SELECT c.id, COUNT(c.id), c.name
+FROM App\Entity\Category c
+LEFT JOIN c.recipes r
+GROUP BY c.id
+DQL)->getResult()
+        );
+
+           dd(
+            $this->getEntityManager()->createQuery(<<<DQL
+SELECT NEW App\\DTO\\CategoryWithCountDTO(c.id, c.name, COUNT(c.id))
+FROM App\Entity\Category c
+LEFT JOIN c.recipes r
+GROUP BY c.id
+DQL)->getResult()
+        );
+        */
+        return [];
+    }
 }
