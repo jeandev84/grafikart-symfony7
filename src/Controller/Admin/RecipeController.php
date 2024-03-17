@@ -44,26 +44,7 @@ class RecipeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
     {
-        /*
-        $platPrincipal = $this->categoryRepository->findOneBy(['slug' => 'plat-principal']);
-        $pates         = $this->recipeRepository->findOneBy(['slug' => 'pates-bolognaises']);
-        $pates->setCategory($platPrincipal);
-        $this->em->flush();
-        */
-
-
         $recipes = $this->recipeRepository->findWithDurationLowerThan(20);
-
-        /*
-        $category = (new Category())
-                    ->setUpdatedAt(new \DateTimeImmutable())
-                    ->setCreatedAt(new \DateTimeImmutable())
-                    ->setName('demo')
-                    ->setSlug('demo');
-        $this->em->persist($category); // resolve cascade persist
-        $recipes[0]->setCategory($category);
-        $this->em->flush();
-        */
 
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes
