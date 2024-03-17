@@ -3,8 +3,13 @@
 {% block title "Recette : " ~ recipe.title %}
 
 {% block body %}
+
     <h1>{{ recipe.title }}</h1>
 
+    <p>
+        <img src="/recipes/images/{{ recipe.thumbnail }}" alt="">
+    </p>
+    
     {{ form(form) }}
 
 {% endblock %}
