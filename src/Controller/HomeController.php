@@ -33,22 +33,6 @@ class HomeController extends AbstractController
     # http://localhost:8000/?name=john
     public function index(Request $request): Response
     {
-        /*
-        $user = new User();
-        $user->setEmail('john@doe.fr')
-            ->setUsername('JohnDoe')
-            ->setPassword($this->userPasswordHasher->hashPassword($user, '1234'))
-            ->setRoles([]);
-
-        $this->em->persist($user);
-        $this->em->flush();
-        */
-
-        dump($this->getUser());
-        dump($this->security->getUser());
-        dump($this->security->getToken());
-        dump($this->security->getToken()->getUser());
-
         return $this->render('home/index.html.twig');
     }
 }
