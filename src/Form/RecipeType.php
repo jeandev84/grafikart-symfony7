@@ -42,7 +42,6 @@ class RecipeType extends AbstractType
     */
     public function autoSlug(PreSubmitEvent $event): void
     {
-         /* dump($event->getData()); */
          $data = $event->getData();
 
          if (empty($data['slug'])) {
