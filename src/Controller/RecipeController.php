@@ -7,11 +7,13 @@ use App\Repository\RecipeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 
 class RecipeController extends AbstractController
@@ -20,9 +22,15 @@ class RecipeController extends AbstractController
 
     /**
      * @param EntityManagerInterface $em
+     * @param FormFactoryInterface $formFactory
+     * @param RecipeRepository $recipeRepository
+     * @param Environment $twig
     */
     public function __construct(
-        protected EntityManagerInterface $em
+        protected EntityManagerInterface $em,
+        protected FormFactoryInterface $formFactory,
+        protected RecipeRepository $recipeRepository,
+        protected Environment $twig
     )
     {
     }
@@ -31,9 +39,11 @@ class RecipeController extends AbstractController
 
     #[Route('/recipes', name: 'recipe.index')]
     # http://localhost:8000/recipe
-    public function index(Request $request, RecipeRepository $recipeRepository): Response
+    public function index(Request $request): Response
     {
-        $recipes = $recipeRepository->findWithDurationLowerThan(20);
+        /* dd($this->container->get('validator')); alias prive inaccessible */
+
+        $recipes = $this->recipeRepository->findWithDurationLowerThan(20);
 
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes
@@ -45,9 +55,9 @@ class RecipeController extends AbstractController
 
     #[Route('/recipe/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
     # http://localhost:8000/recipe/pate-bolognaise-32
-    public function show(Request $request, RecipeRepository $recipeRepository, string $slug, int $id): Response
+    public function show(Request $request, string $slug, int $id): Response
     {
-        $recipe = $recipeRepository->find($id);
+        $recipe = $this->recipeRepository->find($id);
 
         if ($recipe->getSlug() !== $slug) {
             return $this->redirectToRoute('recipe.show', [
@@ -68,7 +78,7 @@ class RecipeController extends AbstractController
     #[Route('/recipe/{id}/edit', name: 'recipe.edit')]
     public function edit(Recipe $recipe, Request $request): Response
     {
-         $form = $this->createForm(RecipeType::class, $recipe);
+         $form = $this->formFactory->create(RecipeType::class, $recipe);
          $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
@@ -102,6 +112,8 @@ class RecipeController extends AbstractController
             $this->addFlash('success', 'La recette a bien ete cree');
             return $this->redirectToRoute('recipe.index');
         }
+
+        /* $this->twig->render('recipe/create.html.twig'); */
 
         return $this->render('recipe/create.html.twig', [
             'form'    => $form
