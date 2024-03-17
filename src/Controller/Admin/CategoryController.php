@@ -40,8 +40,10 @@ class CategoryController extends AbstractController
       #[Route(name: 'index')]
       public function index(CategoryRepository $categoryRepository): Response
       {
+          dd($categoryRepository->findAllWithCount());
+
           return $this->render('admin/category/index.html.twig', [
-              'categories' => $categoryRepository->findAll()
+              'categories' => $categoryRepository->findAllWithCount()
           ]);
       }
 
