@@ -2,6 +2,7 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use App\Form\Listener\FormListenerFactory;
 use DateTimeImmutable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
@@ -19,6 +20,19 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 
 class RecipeType extends AbstractType
 {
+
+
+    /**
+     * @param FormListenerFactory $formListenerFactory
+    */
+    public function __construct(
+        protected FormListenerFactory $formListenerFactory
+    )
+    {
+    }
+
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -35,53 +49,10 @@ class RecipeType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer'
             ])
-            ->addEventListener(FormEvents::PRE_SUBMIT, $this->autoSlug(...))
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->attachTimestamps(...))
+            ->addEventListener(FormEvents::PRE_SUBMIT, $this->formListenerFactory->autoSlug('title'))
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->formListenerFactory->timestamps())
         ;
     }
-
-
-
-
-
-    /**
-     * @param PreSubmitEvent $event
-     * @return void
-    */
-    public function autoSlug(PreSubmitEvent $event): void
-    {
-         $data = $event->getData();
-
-         if (empty($data['slug'])) {
-             $slugger = new AsciiSlugger();
-             $data['slug'] = strtolower($slugger->slug($data['title']));
-             $event->setData($data);
-         }
-    }
-
-
-
-
-
-    /**
-     * @param PostSubmitEvent $event
-     * @return void
-    */
-    public function attachTimestamps(PostSubmitEvent $event): void
-    {
-        $data = $event->getData();
-
-        if (!($data instanceof Recipe)) {
-            return;
-        }
-
-        $data->setUpdatedAt(new DateTimeImmutable());
-
-        if (!$data->getId()) {
-            $data->setCreatedAt(new DateTimeImmutable());
-        }
-    }
-
 
 
 
@@ -89,13 +60,7 @@ class RecipeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class'        => Recipe::class,
-            /*
-            'validation_groups' => [
-                'Default', // les regles par defaut
-                'Extra'
-            ] // groups de validation utiliser par le formuaire
-            */
+            'data_class' => Recipe::class
         ]);
     }
 }

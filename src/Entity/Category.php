@@ -1,11 +1,15 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[UniqueEntity('name')]
+#[UniqueEntity('slug')]
 class Category
 {
     #[ORM\Id]
@@ -14,10 +18,13 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[Assert\Length(min: 5)]
+    private string $name = '';
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    #[Assert\Length(min: 5)]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: 'Invalid slug')]
+    private string $slug = '';
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -30,7 +37,7 @@ class Category
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -42,7 +49,7 @@ class Category
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
