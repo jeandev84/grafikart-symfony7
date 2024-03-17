@@ -54,6 +54,7 @@ class RecipeController extends AbstractController
 
         $recipes = $this->recipeRepository->findWithDurationLowerThan(20);
 
+        /*
         $category = (new Category())
                     ->setUpdatedAt(new \DateTimeImmutable())
                     ->setCreatedAt(new \DateTimeImmutable())
@@ -62,7 +63,7 @@ class RecipeController extends AbstractController
         $this->em->persist($category); // resolve cascade persist
         $recipes[0]->setCategory($category);
         $this->em->flush();
-
+        */
 
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes
