@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -27,7 +28,9 @@ class RecipeType extends AbstractType
             ->add('slug', TextType::class, [
                 'required'    => false
             ])
-            ->add('content')
+            ->add('content', TextareaType::class, [
+                'empty_data' => '', // la valeur par default au cas ou le champs est vide
+            ])
             ->add('duration')
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer'
