@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 class ContactController extends AbstractController
 {
@@ -32,10 +33,11 @@ class ContactController extends AbstractController
         $data = new ContactDTO();
 
         // TODO : remove this
+        /*
         $data->name    = 'John Doe';
         $data->email   = 'john@doe.fr';
         $data->message = 'Super site';
-
+        */
 
         $form = $this->createForm(ContactType::class, $data);
         $form->handleRequest($request);
@@ -48,16 +50,22 @@ class ContactController extends AbstractController
                     ->html('<h1>Hello</h1>');
             */
 
-            $message = (new TemplatedEmail())
-                       ->to('contact@demo.fr')
-                       ->from($data->email)
-                       ->subject('Demande de contact')
-                       ->htmlTemplate('emails/contact.html.twig')
-                       ->context(['data' => $data]);
+            try {
 
-            $this->mailer->send($message);
-            $this->addFlash('success', 'Votre message a bien ete envoye');
-            return $this->redirectToRoute('contact');
+                $message = (new TemplatedEmail())
+                           ->to($data->service)
+                           ->from($data->email)
+                           ->subject('Demande de contact')
+                           ->htmlTemplate('emails/contact.html.twig')
+                           ->context(['data' => $data]);
+
+                $this->mailer->send($message);
+                $this->addFlash('success', 'Votre message a bien ete envoye');
+                return $this->redirectToRoute('contact');
+
+            } catch (Throwable $e) {
+                $this->addFlash('danger', "Impossible d' envoyer votre email.");
+            }
         }
 
         return $this->render('contact/contact.html.twig', [
