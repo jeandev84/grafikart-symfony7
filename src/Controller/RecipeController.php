@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -71,6 +72,7 @@ class RecipeController extends AbstractController
          $form->handleRequest($request);
 
          if ($form->isSubmitted() && $form->isValid()) {
+             $recipe->setUpdatedAt(new DateTimeImmutable());
              $this->em->flush();
              $this->addFlash('success', 'La recette a bien ete modifiee');
              return $this->redirectToRoute('recipe.index');
@@ -80,5 +82,43 @@ class RecipeController extends AbstractController
              'recipe'  => $recipe,
              'form'    => $form, // recipe_form
          ]);
+    }
+
+
+
+
+    #[Route('/recipe/create', name: 'recipe.create', methods: ['GET', 'POST'])]
+    public function create(Request $request): Response
+    {
+        $recipe = new Recipe();
+
+        $form  = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $recipe->setCreatedAt(new DateTimeImmutable());
+            $recipe->setUpdatedAt(new DateTimeImmutable());
+
+            $this->em->persist($recipe);
+            $this->em->flush();
+            $this->addFlash('success', 'La recette a bien ete cree');
+            return $this->redirectToRoute('recipe.index');
+        }
+
+        return $this->render('recipe/create.html.twig', [
+            'form'    => $form
+        ]);
+    }
+
+
+
+
+    #[Route('/recipe/{id}', name: 'recipe.delete', methods: ['DELETE'])]
+    public function remove(Recipe $recipe): RedirectResponse
+    {
+         $this->em->remove($recipe);
+         $this->em->flush();
+         $this->addFlash('success', 'La recette a bien ete supprimee');
+         return $this->redirectToRoute('recipe.index');
     }
 }
