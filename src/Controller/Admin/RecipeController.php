@@ -1,8 +1,10 @@
 <?php
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
+use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,12 +26,14 @@ class RecipeController extends AbstractController
      * @param EntityManagerInterface $em
      * @param FormFactoryInterface $formFactory
      * @param RecipeRepository $recipeRepository
+     * @param CategoryRepository $categoryRepository
      * @param Environment $twig
     */
     public function __construct(
         protected EntityManagerInterface $em,
         protected FormFactoryInterface $formFactory,
         protected RecipeRepository $recipeRepository,
+        protected CategoryRepository $categoryRepository,
         protected Environment $twig
     )
     {
@@ -40,7 +44,25 @@ class RecipeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
     {
+        /*
+        $platPrincipal = $this->categoryRepository->findOneBy(['slug' => 'plat-principal']);
+        $pates         = $this->recipeRepository->findOneBy(['slug' => 'pates-bolognaises']);
+        $pates->setCategory($platPrincipal);
+        $this->em->flush();
+        */
+
+
         $recipes = $this->recipeRepository->findWithDurationLowerThan(20);
+
+        $category = (new Category())
+                    ->setUpdatedAt(new \DateTimeImmutable())
+                    ->setCreatedAt(new \DateTimeImmutable())
+                    ->setName('demo')
+                    ->setSlug('demo');
+        $this->em->persist($category); // resolve cascade persist
+        $recipes[0]->setCategory($category);
+        $this->em->flush();
+
 
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes
