@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * FormListenerFactory
@@ -20,6 +21,20 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 */
 class FormListenerFactory
 {
+
+
+    /**
+     * @param SluggerInterface $slugger
+    */
+    public function __construct(
+        protected SluggerInterface $slugger
+    )
+    {
+    }
+
+
+
+
     /**
      * @param string $field
      * @return callable
@@ -30,8 +45,7 @@ class FormListenerFactory
             $data = $event->getData();
 
             if (empty($data['slug'])) {
-                $slugger = new AsciiSlugger();
-                $data['slug'] = strtolower((string)$slugger->slug($data[$field]));
+                $data['slug'] = strtolower((string)$this->slugger->slug($data[$field]));
                 $event->setData($data);
             }
         };
