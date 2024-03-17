@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\DTO\CategoryWithCountDTO;
+
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +26,7 @@ class CategoryRepository extends ServiceEntityRepository
 
 
     /**
-     * @return CategoryWithCountDTO[]
+     * @return array
     */
     public function findAllWithCount(): array
     {
