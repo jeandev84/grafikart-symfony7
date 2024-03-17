@@ -7,11 +7,15 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 # use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 #[UniqueEntity('title')]
 #[UniqueEntity('slug')]
+#[Vich\Uploadable]
+# https://github.com/dustin10/VichUploaderBundle/blob/master/docs/usage.md#step-1-configure-an-upload-mapping
 class Recipe
 {
     #[ORM\Id]
@@ -50,6 +54,20 @@ class Recipe
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $thumbnail = null;
+
+
+    /**
+     * @var float|null
+    */
+    ##[ORM\Column(nullable: true)]
+    #private ?float $thumbnailSize = null;
+
+
+    # recipes - provient du mapping definit dans vich_uploader.yaml
+    # #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail', size: 'thumbnailSize')]
+    #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail')]
+    #[Assert\Image()]
+    private ?File $thumbnailFile = null;
 
     public function getId(): ?int
     {
@@ -148,6 +166,34 @@ class Recipe
     public function setThumbnail(?string $thumbnail): static
     {
         $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+
+
+
+
+    /**
+     * @return File|null
+    */
+    public function getThumbnailFile(): ?File
+    {
+        return $this->thumbnailFile;
+    }
+
+
+
+
+
+
+    /**
+     * @param File|null $thumbnailFile
+     * @return $this
+    */
+    public function setThumbnailFile(?File $thumbnailFile): static
+    {
+        $this->thumbnailFile = $thumbnailFile;
 
         return $this;
     }
