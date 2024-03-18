@@ -73,7 +73,7 @@ class RecipeType extends AbstractType
                 ],
                 'attr' => [
                     // on donne le nom de notre controller situe ./assets/controllers/form-collection_controller.js sans le suffix controller
-                    'data-controller' => 'form-collection',
+                    #'data-controller' => 'form-collection', //vue qu' on a personnalise notre template ./templates/form/bootstrap_5/layout.html.twig on peut commenter 'data-controller'
                     'data-form-collection-add-label-value'    => 'Ajouter un ingredient', // permet de changer la valeur de addLabel dans ./assets/controllers/form-collection_controller.js
                     'data-form-collection-delete-label-value' => 'Supprimer un ingredient', // permet de changer la valeur de deleteLabel dans ./assets/controllers/form-collection_controller.js
                 ]
