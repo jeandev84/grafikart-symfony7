@@ -34,7 +34,7 @@ class Recipe
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
     #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: 'Invalid slug')]
-    #[Groups(['recipes.index'])]
+    #[Groups(['recipes.index', 'recipes.create'])]
     private string $slug = '';
 
     #[ORM\Column(type: Types::TEXT)]

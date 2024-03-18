@@ -6,10 +6,12 @@ namespace App\Controller\Api;
 use App\Entity\Recipe;
 use App\Repository\RecipeRepository;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -29,10 +31,12 @@ class RecipesController extends AbstractController
 
 
        /**
+        * @param EntityManagerInterface $em
         * @param RecipeRepository $recipeRepository
         * @param SerializerInterface $serializer
        */
        public function __construct(
+           protected EntityManagerInterface $em,
            protected RecipeRepository $recipeRepository,
            protected SerializerInterface $serializer
        )
@@ -72,21 +76,25 @@ class RecipesController extends AbstractController
 
     #[Route("/api/recipes", methods: ['POST'])]
     # http://localhost:8000/api/recipes
-    public function create(Request $request): JsonResponse
+    public function create(
+        Request $request,
+        #[MapRequestPayload(
+            serializationContext: [
+                'groups' => ['recipes.create']
+            ]
+        )]
+        Recipe $recipe
+    ): JsonResponse
     {
-        /* dd($request->toArray()); */
 
-        $recipe = new Recipe();
         $recipe->setCreatedAt(new DateTimeImmutable())
                ->setUpdatedAt(new DateTimeImmutable());
 
-        $data = $this->serializer->deserialize($request->getContent(), Recipe::class, 'json', [
-            AbstractNormalizer::OBJECT_TO_POPULATE => $recipe,
-            'groups' => ['recipes.create'], // groups dont on peut modifier
+        $this->em->persist($recipe);
+        $this->em->flush();
+
+        return $this->json($recipe, Response::HTTP_OK, [], [
+            'groups' => ['recipes.index', 'recipes.show']
         ]);
-
-        dd($data);
-
-        return $this->json([]);
     }
 }
