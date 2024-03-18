@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ServiceController extends AbstractController
 {
 
-      #[Route('/demo')]
+      #[Route('/bash')]
       public function demo(
           DemoService $demoService,
           ValidatorInterface $validator

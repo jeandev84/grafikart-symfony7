@@ -31,9 +31,9 @@ class ContactType extends AbstractType
             ])
             ->add('service', ChoiceType::class, [
                 'choices' => [
-                    'Compta'  => 'compta@demo.fr',
-                    'Support' => 'support@demo.fr',
-                    'Marketing' => 'marketing@demo.fr',
+                    'Compta'  => 'compta@bash.fr',
+                    'Support' => 'support@bash.fr',
+                    'Marketing' => 'marketing@bash.fr',
                 ]
             ])
         ;

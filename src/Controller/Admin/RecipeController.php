@@ -55,7 +55,7 @@ class RecipeController extends AbstractController
 
 
 
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'index', methods: ['GET'])]
     #[IsGranted(RecipeVoter::LIST)]
     public function index(Request $request): Response
     {
@@ -68,6 +68,8 @@ class RecipeController extends AbstractController
             'recipes' => $recipes
         ]);
     }
+
+
 
 
 

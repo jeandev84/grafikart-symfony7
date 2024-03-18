@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Recette : " ~ recipe.title %}
+
+{% block body %}
+    <h1>{{ recipe.title }}</h1>
+
+    <p>
+        <img src="{{ vich_uploader_asset(recipe, 'thumbnailFile') }}" alt="">
+    </p>
+
+    <p>{{ recipe.content | nl2br }}</p>
+{% endblock %}

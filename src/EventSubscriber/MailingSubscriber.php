@@ -73,7 +73,7 @@ class MailingSubscriber implements EventSubscriberInterface
 
         $message = (new Email())
             ->to($user->getEmail())
-            ->from('support@demo.fr')
+            ->from('support@bash.fr')
             ->subject('Connexion')
             ->text('Vous vous etes connecte');
 
