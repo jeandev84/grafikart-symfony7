@@ -80,6 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
+
+        // That is a bad way
+        // I do it juste for stimulate roles adding more quickly
         if ($this->email === 'john@doe.fr') {
             $roles[] = 'ROLE_ADMIN';
         }
