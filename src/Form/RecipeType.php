@@ -51,8 +51,12 @@ class RecipeType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'class'        => Category::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'autocomplete' => true
             ])
+            /*
+            ->add('category', CategoryAutocompleteField::class)
+            */
             ->add('content', TextareaType::class, [
                 'empty_data' => '', // la valeur par default au cas ou le champs est vide
             ])
