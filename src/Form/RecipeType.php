@@ -72,8 +72,10 @@ class RecipeType extends AbstractType
                     'label' => false, // ici on veut que chaque entree n' est pas un label
                 ],
                 'attr' => [
-                    // on donne le nom de notre controller situe ./assets/controllers/... sans le suffix controller
+                    // on donne le nom de notre controller situe ./assets/controllers/form-collection_controller.js sans le suffix controller
                     'data-controller' => 'form-collection',
+                    'data-form-collection-add-label-value'    => 'Ajouter un ingredient', // permet de changer la valeur de addLabel dans ./assets/controllers/form-collection_controller.js
+                    'data-form-collection-delete-label-value' => 'Supprimer un ingredient', // permet de changer la valeur de deleteLabel dans ./assets/controllers/form-collection_controller.js
                 ]
             ])
             ->add('save', SubmitType::class, [
