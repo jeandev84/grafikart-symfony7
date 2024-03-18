@@ -34,6 +34,7 @@ class RecipeController extends AbstractController
      * @param CategoryRepository $categoryRepository
      * @param Environment $twig
      * @param UploaderHelper $uploaderHelper
+     * @param Security $security
     */
     public function __construct(
         protected EntityManagerInterface $em,
