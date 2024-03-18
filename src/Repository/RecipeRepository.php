@@ -32,12 +32,22 @@ class RecipeRepository extends ServiceEntityRepository
 
     /**
      * @param int $page
+     * @param int|null $userId
      * @return PaginationInterface
     */
-    public function paginateRecipes(int $page): PaginationInterface
+    public function paginateRecipes(int $page, ?int $userId = null): PaginationInterface
     {
+        $qb = $this->createQueryBuilder('r')
+                   ->leftJoin('r.category', 'c')
+                   ->select('r', 'c');
+
+        if ($userId) {
+           $qb = $qb->andWhere('r.user = :user')
+                    ->setParameter('user', $userId);
+        }
+
         return $this->paginator->paginate(
-            $this->createQueryBuilder('r')->leftJoin('r.category', 'c')->select('r', 'c'),
+            $qb,
             $page,
             20,
             [

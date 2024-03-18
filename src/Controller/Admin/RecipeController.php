@@ -6,8 +6,10 @@ use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
+use App\Security\Voter\RecipeVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +23,6 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 
 #[Route('/admin/recipes', name: 'admin.recipe.')]
-#[IsGranted('ROLE_ADMIN')]
 class RecipeController extends AbstractController
 {
 
@@ -40,7 +41,8 @@ class RecipeController extends AbstractController
         protected RecipeRepository $recipeRepository,
         protected CategoryRepository $categoryRepository,
         protected Environment $twig,
-        protected UploaderHelper $uploaderHelper
+        protected UploaderHelper $uploaderHelper,
+        protected Security $security
     )
     {
     }
@@ -48,10 +50,13 @@ class RecipeController extends AbstractController
 
 
     #[Route('/', name: 'index')]
+    #[IsGranted(RecipeVoter::LIST)]
     public function index(Request $request): Response
     {
-        $page    = $request->query->getInt('page', 1);
-        $recipes = $this->recipeRepository->paginateRecipes($page);
+        $page       = $request->query->getInt('page', 1);
+        $userId     = $this->security->getUser()->getId();
+        $canListAll = $this->security->isGranted(RecipeVoter::LIST_ALL);
+        $recipes    = $this->recipeRepository->paginateRecipes($page, $canListAll ? null : $userId);
 
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes
@@ -62,6 +67,7 @@ class RecipeController extends AbstractController
 
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted(RecipeVoter::CREATE)]
     public function create(Request $request): Response
     {
         $recipe = new Recipe();
@@ -90,6 +96,7 @@ class RecipeController extends AbstractController
 
 
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
+    #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function edit(Recipe $recipe, Request $request): Response
     {
          $form = $this->formFactory->create(RecipeType::class, $recipe);
@@ -115,6 +122,7 @@ class RecipeController extends AbstractController
 
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
+    #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function remove(Recipe $recipe): RedirectResponse
     {
          $this->em->remove($recipe);
