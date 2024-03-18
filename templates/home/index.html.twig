@@ -3,6 +3,15 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-{#  {% trans %}Welcome{% endtrans %}#}
-  {{ 'Welcome' | trans }}
+   {# {% trans %}Welcome{% endtrans %} #}
+   <h1>
+     {# {{ 'Welcome' | trans }} #}
+     {{ 'welcome' | trans({name: 'John'}) }}
+     {# {{ 'welcome' | trans({':name': 'John'}) }} #}
+   </h1>
+  <p>
+    {# {{ "home_recipe_count" | trans({count: 100}) }} #}
+    {{ "home_recipe_count" | trans({count: 0}) }}
+
+  </p>
 {% endblock %}
