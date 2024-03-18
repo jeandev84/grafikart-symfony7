@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Entity\Category;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
+use App\Message\RecipePDFMessage;
 use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use App\Security\Voter\RecipeVoter;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -36,6 +38,7 @@ class RecipeController extends AbstractController
      * @param Environment $twig
      * @param UploaderHelper $uploaderHelper
      * @param Security $security
+     * @param MessageBusInterface $messageBus
     */
     public function __construct(
         protected EntityManagerInterface $em,
@@ -44,7 +47,8 @@ class RecipeController extends AbstractController
         protected CategoryRepository $categoryRepository,
         protected Environment $twig,
         protected UploaderHelper $uploaderHelper,
-        protected Security $security
+        protected Security $security,
+        protected MessageBusInterface $messageBus
     )
     {
     }
@@ -107,6 +111,8 @@ class RecipeController extends AbstractController
 
          if ($form->isSubmitted() && $form->isValid()) {
              $this->em->flush();
+             $this->messageBus->dispatch(new RecipePDFMessage($recipe->getId()));
+
              $this->addFlash('success', 'La recette a bien ete modifiee');
              return $this->redirectToRoute('admin.recipe.index');
          }
