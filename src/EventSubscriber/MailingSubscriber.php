@@ -57,13 +57,13 @@ class MailingSubscriber implements EventSubscriberInterface
     }
 
 
-
-
-
     /**
+     * Envoie un email a chaque fois que nous somme authentifie
+     *
      * @param InteractiveLoginEvent $event
      * @return void
-    */
+     * @throws TransportExceptionInterface
+     */
     public function onLogin(InteractiveLoginEvent $event): void
     {
          $user = $event->getAuthenticationToken()->getUser();
