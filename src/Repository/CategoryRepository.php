@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -41,6 +42,11 @@ class CategoryRepository extends ServiceEntityRepository
                     ->setHint(
                         Query::HINT_CUSTOM_OUTPUT_WALKER,
                         TranslationWalker::class
+                    )
+                    ->setHint(
+                        //TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+                        TranslatableListener::HINT_FALLBACK,
+                        'fr' //en
                     )
                     */
                     ->getResult();
