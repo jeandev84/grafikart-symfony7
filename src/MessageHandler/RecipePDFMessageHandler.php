@@ -29,7 +29,7 @@ final class RecipePDFMessageHandler
     */
     public function __invoke(RecipePDFMessage $message)
     {
-        throw new \Error("Something went wrong");
+        /* throw new \Error("Something went wrong"); */
         file_put_contents($this->path . '/'. $message->recipeId . '.pdf', '');
     }
 }
