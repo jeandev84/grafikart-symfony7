@@ -32,6 +32,7 @@ class HomeController extends AbstractController
 
 
 
+    ##[Route("/{_locale}", name: "home")]
     #[Route("/", name: "home")]
     # http://localhost:8000/?name=john
     public function index(Request $request): Response
