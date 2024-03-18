@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\DTO\ContactDTO;
@@ -18,23 +17,27 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'empty_data' => ''
+                'empty_data' => '',
+                'label' => 'contactForm.name'
             ])
             ->add('email', EmailType::class, [
-                'empty_data' => ''
+                'empty_data' => '',
+                'label' => 'contactForm.email'
             ])
             ->add('message', TextareaType::class, [
-                'empty_data' => ''
+                'empty_data' => '',
+                'label' => 'contactForm.message'
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Envoyer'
+                'label' => 'contactForm.submit'
             ])
             ->add('service', ChoiceType::class, [
+                'label' => 'contactForm.service',
                 'choices' => [
                     'Compta'  => 'compta@bash.fr',
                     'Support' => 'support@bash.fr',
                     'Marketing' => 'marketing@bash.fr',
-                ]
+                ],
             ])
         ;
     }

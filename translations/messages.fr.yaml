@@ -1,0 +1,9 @@
+Name: Prenom
+
+# contactForm.name (from label Form ContactType)
+contactForm:
+   name: Prenom
+   email: Courriel
+   service: Service
+   message: Message
+   submit: Envoyer l' email
