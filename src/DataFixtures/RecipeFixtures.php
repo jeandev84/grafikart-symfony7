@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -35,6 +36,29 @@ class RecipeFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
         $faker->addProvider(new Restaurant($faker));
+
+        $ingredients = array_map(fn(string $name) => (new Ingredient()), [
+            "Farine",
+            "Sucre",
+            "Oeufs",
+            "Beurre",
+            "Lait",
+            "Levure chimique",
+            "Sel",
+            "Chocolat noir",
+            "Pepites de chocolat",
+            "Fruits secs (amandes, noix, etc.)",
+            "Vanille",
+            "Cannelle",
+            "Fraise",
+            "Banane",
+            "Pomme",
+            "Carotte",
+            "Oignon",
+            "Ail",
+            "Echalote",
+            "Herbes fraiches (ciboulette, persil, etc.)"
+        ]);
 
         $categories = ['Plat chaud', 'Dessert', 'Entree', 'Gouter'];
 
