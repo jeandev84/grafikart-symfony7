@@ -74,7 +74,7 @@ class Recipe
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(targetEntity: Quantity::class, mappedBy: 'recipe', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Quantity::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
     private Collection $quantities;
 
     public function __construct()
