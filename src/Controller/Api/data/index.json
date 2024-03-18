@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": 2,
+      "title": "Riz cantonais",
+      "slug": "riz-cantonais",
+      "duration": 15
+    },
+    {
+      "id": 4,
+      "title": "Pates bolognaises",
+      "slug": "pates-bolognaises",
+      "duration": 10
+    },
+    {
+      "id": 7,
+      "title": "Recette de demo",
+      "slug": "recette-de-demo",
+      "duration": 10
+    },
+    {
+      "id": 11,
+      "title": "Nouvelle recette API",
+      "slug": "azeaze",
+      "duration": 100
+    }
+  ],
+  "total": 4,
+  "page": 1,
+  "lastPage": 1
+}

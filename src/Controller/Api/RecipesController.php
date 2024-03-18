@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\DTO\PaginationDTO;
 use App\Entity\Recipe;
 use App\Repository\RecipeRepository;
 use DateTimeImmutable;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
@@ -46,11 +48,22 @@ class RecipesController extends AbstractController
 
 
        #[Route("/api/recipes", methods: ['GET'])]
-       # http://localhost:8000/api/recipes
-       public function index(Request $request): JsonResponse
+       # http://localhost:8000/api/recipes?page=3
+       public function index(
+           #[MapQueryString]
+           ?PaginationDTO $paginationDTO = null
+       ): JsonResponse
        {
+           /*
            $recipes = $this->recipeRepository->paginateRecipes(
                $request->query->getInt('page', 1)
+           );
+           */
+
+           # dd($paginationDTO);
+
+           $recipes = $this->recipeRepository->paginateRecipes(
+               $paginationDTO?->page
            );
 
            return $this->json($recipes, Response::HTTP_OK, [], [
