@@ -2,9 +2,11 @@
 namespace App\Controller;
 
 use App\DTO\ContactDTO;
+use App\Event\ContactRequestEvent;
 use App\Form\ContactType;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -17,10 +19,10 @@ class ContactController extends AbstractController
 
 
     /**
-     * @param MailerInterface $mailer
+     * @param EventDispatcherInterface $dispatcher
     */
     public function __construct(
-        protected MailerInterface $mailer
+        protected EventDispatcherInterface $dispatcher
     )
     {
     }
@@ -32,34 +34,14 @@ class ContactController extends AbstractController
     {
         $data = new ContactDTO();
 
-        // TODO : remove this
-        /*
-        $data->name    = 'John Doe';
-        $data->email   = 'john@doe.fr';
-        $data->message = 'Super site';
-        */
-
         $form = $this->createForm(ContactType::class, $data);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /*
-            $emails = (new Email())
-                    ->to('contact@demo.fr')
-                    ->from($data->email)
-                    ->html('<h1>Hello</h1>');
-            */
 
             try {
 
-                $message = (new TemplatedEmail())
-                           ->to($data->service)
-                           ->from($data->email)
-                           ->subject('Demande de contact')
-                           ->htmlTemplate('emails/contact.html.twig')
-                           ->context(['data' => $data]);
-
-                $this->mailer->send($message);
+                $this->dispatcher->dispatch(new ContactRequestEvent($data));
                 $this->addFlash('success', 'Votre message a bien ete envoye');
                 return $this->redirectToRoute('contact');
 
