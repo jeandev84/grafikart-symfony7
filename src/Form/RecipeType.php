@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -61,6 +62,14 @@ class RecipeType extends AbstractType
                 'empty_data' => '', // la valeur par default au cas ou le champs est vide
             ])
             ->add('duration')
+            // by_reference (permet d' interagir avec addSomething($object), removeSomething($object) ...)
+            ->add('quantities', CollectionType::class, [
+                'entry_type'   => QuantityType::class,
+                'by_reference' => false, // false afin qu' il interagisse avec les methods add(), remove() ...
+                'entry_options' => [ // configure chaque option
+                    'label' => false, // ici on veut que chaque entree n' est pas un label
+                ]
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer'
             ])
