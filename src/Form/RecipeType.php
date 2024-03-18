@@ -65,9 +65,14 @@ class RecipeType extends AbstractType
             // by_reference (permet d' interagir avec addSomething($object), removeSomething($object) ...)
             ->add('quantities', CollectionType::class, [
                 'entry_type'   => QuantityType::class,
+                'allow_add'    => true, // On donne la possibilite d' en rajouter
                 'by_reference' => false, // false afin qu' il interagisse avec les methods add(), remove() ...
                 'entry_options' => [ // configure chaque option
                     'label' => false, // ici on veut que chaque entree n' est pas un label
+                ],
+                'attr' => [
+                    // on donne le nom de notre controller situe ./assets/controllers/... sans le suffix controller
+                    'data-controller' => 'form-collection',
                 ]
             ])
             ->add('save', SubmitType::class, [
